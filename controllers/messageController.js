@@ -67,7 +67,7 @@ export const markMessageAsSeen = async(req,res)=>{
 export const sendMessage = async(req,res)=>{
     try {
         const { text, image } = req.body
-        const recevierId = req.params.id
+        const receiverId = req.params.id   // ✅ FIXED
         const senderId = req.user._id
 
         let imageUrl;
@@ -78,22 +78,20 @@ export const sendMessage = async(req,res)=>{
 
         const newMessage = await Message.create({
             senderId,
-            recevierId,
+            receiverId,   // ✅ FIXED
             text,
             image: imageUrl
         })
 
-        // Emit the new Message to the receiver's socket
-        const receiverSocketId = userSocketMap[recevierId]
+        const receiverSocketId = userSocketMap[receiverId]
         if(receiverSocketId){
             io.to(receiverSocketId).emit('newMessage', newMessage)
         }
 
         res.json({ success: true, newMessage })
 
-
     } catch (error) {
-        console.log(error.message);
+        console.log(error.message)
         res.json({ success: false, message: error.message }) 
     }
 }
