@@ -13,7 +13,7 @@ export const signup = async(req,res)=>{
         }
 
         const user = await User.findOne({ email })
-        if(!user){
+        if(user){
             return res.json({ success: false, message: "Account already exists" })
         }
 
